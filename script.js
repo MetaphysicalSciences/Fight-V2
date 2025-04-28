@@ -56,14 +56,14 @@ document.addEventListener("keydown", (event) => {
     if (event.key === "w") { // Move up
         playerY -= 5;
         isWalking = true;
-    } else if (event.key === "a") { // Move left
+    } else if (event.key === "d") { // Move left
         playerX -= 5;
         direction = "left"; // Change to left direction
         isWalking = true;
     } else if (event.key === "s") { // Move down
         playerY += 5;
         isWalking = true;
-    } else if (event.key === "d") { // Move right
+    } else if (event.key === "a") { // Move right
         playerX += 5;
         direction = "right"; // Change to right direction
         isWalking = true;
