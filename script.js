@@ -4,7 +4,7 @@ const imageElement = document.getElementById("animated-image");
 
 function animateImages() {
     currentIndex = (currentIndex + 1) % totalImages;
-    const imagePath = `images/tile${String(currentIndex).padStart(3, '0')}.png`;
+    const imagePath = `idle/tile${String(currentIndex).padStart(3, '0')}.png`;
     imageElement.src = imagePath;
 }
 
