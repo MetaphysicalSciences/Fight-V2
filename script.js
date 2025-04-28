@@ -84,7 +84,7 @@ document.addEventListener('keydown', (e) => {
 
 // Stop walking or test1 animation when key is released
 document.addEventListener('keyup', (e) => {
-    if ((e.key === 'a' || e.key === 'A') || (e.key === 'd' || e.key === 'D')) {
+    if ((e.key === 'd' || e.key === 'D') || (e.key === 'a' || e.key === 'A')) {
         walking = false;
         clearInterval(animationInterval);  // Stop walking animation
         animationInterval = setInterval(animateIdle, 100);  // Resume idle animation
