@@ -1,77 +1,67 @@
 let currentIndex = 0;
-const idleImages = 60;  // tile000 to tile059 (idle)
-const walkImages = 76;  // tile000 to tile075 (walk)
+const totalIdleImages = 60;  // tile000 to tile059 in idle
+const totalWalkImages = 76;  // tile000 to tile075 in walk
+let walking = false;  // Flag to track if walking animation is active
+let walkingRight = true;  // Direction flag for walking (left or right)
 const imageElement = document.getElementById("animated-image");
 
-let isWalking = false;
-let direction = "right";  // Default walking direction (can be left or right)
-
-// Preload all the idle images
-const idleFrames = [];
-for (let i = 0; i < idleImages; i++) {
+// Preload idle images
+const idleImages = [];
+for (let i = 0; i < totalIdleImages; i++) {
     const img = new Image();
     img.src = `idle/tile${String(i).padStart(3, '0')}.png`;
-    idleFrames.push(img);
+    idleImages.push(img);
 }
 
-// Preload all the walk images
-const walkFrames = [];
-for (let i = 0; i < walkImages; i++) {
+// Preload walking images
+const walkImages = [];
+for (let i = 0; i < totalWalkImages; i++) {
     const img = new Image();
     img.src = `walk/tile${String(i).padStart(3, '0')}.png`;
-    walkFrames.push(img);
+    walkImages.push(img);
 }
 
-// Player position
-let playerX = 0;
-let playerY = 0;
-
+// Function to animate idle
 function animateIdle() {
-    currentIndex = (currentIndex + 1) % idleImages;
-    imageElement.src = idleFrames[currentIndex].src;
+    currentIndex = (currentIndex + 1) % totalIdleImages;
+    imageElement.src = idleImages[currentIndex].src;
 }
 
-function animateWalk() {
-    currentIndex = (currentIndex + 1) % walkImages;
-    let imagePath = walkFrames[currentIndex].src;
-    
-    // Flip the image when moving right
-    if (direction === "right") {
-        imageElement.src = imagePath;
+// Function to animate walking
+function animateWalking() {
+    currentIndex = (currentIndex + 1) % totalWalkImages;
+    imageElement.src = walkImages[currentIndex].src;
+    // Flip the image if moving right
+    if (walkingRight) {
+        imageElement.style.transform = 'scaleX(1)';  // Facing right
     } else {
-        // Flip image horizontally when moving left
-        imageElement.src = imagePath.replace("walk", "walk-flipped");
+        imageElement.style.transform = 'scaleX(-1)';  // Flipped to face left
     }
 }
 
-function handleMovement() {
-    if (isWalking) {
-        animateWalk();
-    } else {
-        animateIdle();
-    }
-}
+// Set an interval for the idle animation
+let animationInterval = setInterval(animateIdle, 100);  // Change image every 100ms
 
-document.addEventListener("keydown", (event) => {
-    if (event.key === "w") { // Move up
-        playerY -= 5;
-        isWalking = true;
-    } else if (event.key === "d") { // Move left
-        playerX -= 5;
-        direction = "left"; // Change to left direction
-        isWalking = true;
-    } else if (event.key === "s") { // Move down
-        playerY += 5;
-        isWalking = true;
-    } else if (event.key === "a") { // Move right
-        playerX += 5;
-        direction = "right"; // Change to right direction
-        isWalking = true;
+// Listen for keypresses for movement (A and D keys)
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'a' || e.key === 'A') {
+        walking = true;
+        walkingRight = false;  // Moving left
+        clearInterval(animationInterval); // Stop idle animation
+        animationInterval = setInterval(animateWalking, 100);  // Start walking animation
+    } else if (e.key === 'd' || e.key === 'D') {
+        walking = true;
+        walkingRight = true;  // Moving right
+        clearInterval(animationInterval); // Stop idle animation
+        animationInterval = setInterval(animateWalking, 100);  // Start walking animation
     }
 });
 
-document.addEventListener("keyup", () => {
-    isWalking = false;
+// Stop walking when key is released
+document.addEventListener('keyup', (e) => {
+    if ((e.key === 'a' || e.key === 'A') || (e.key === 'd' || e.key === 'D')) {
+        walking = false;
+        clearInterval(animationInterval);  // Stop walking animation
+        animationInterval = setInterval(animateIdle, 100);  // Resume idle animation
+    }
 });
-
-setInterval(handleMovement, 100);  // Update animation and movement every 100ms
