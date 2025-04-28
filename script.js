@@ -55,22 +55,24 @@ function animateTest1() {
     imageElement.src = test1Images[currentIndex].src;
 }
 
-// Set an interval for the idle animation
+// Start idle animation
 let animationInterval = setInterval(animateIdle, 100);  // Change image every 100ms
 
-// Listen for keypresses for movement (A and D keys)
+// Listen for keydown events for movement (A, D, and P keys)
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'a' || e.key === 'A') {
+    // Start walking animation when A or D is pressed
+    if ((e.key === 'a' || e.key === 'A') && !walking) {
         walking = true;
         walkingRight = false;  // Moving left
         clearInterval(animationInterval); // Stop idle animation
         animationInterval = setInterval(animateWalking, 100);  // Start walking animation
-    } else if (e.key === 'd' || e.key === 'D') {
+    } else if ((e.key === 'd' || e.key === 'D') && !walking) {
         walking = true;
         walkingRight = true;  // Moving right
         clearInterval(animationInterval); // Stop idle animation
         animationInterval = setInterval(animateWalking, 100);  // Start walking animation
     }
+    
     // Trigger test1 animation with the P key
     if (e.key === 'p' || e.key === 'P') {
         test1Animation = true;
